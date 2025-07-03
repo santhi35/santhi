@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Register</title>
+    <style>
+        /* === Register/Login Form Styles === */
+        body {
+            background-color: #fffaf4;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 60px;
+            margin: 0;
+        }
+
+        h2 {
+            color: #d35400;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        form {
+            background-color: #ffffff;
+            padding: 25px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 320px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0 20px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        input[type="submit"] {
+            background-color: #e67e22;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            width: 100%;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #d35400;
+        }
+
+        p {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Flash message styling */
+        ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: url("{{ url_for('static', filename='images/backgroundregister.jpg') }}") no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+    </style>
+</head>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<body>
+    <h2>Register</h2>
+    <form method="POST">
+        Username: <input name="username" required><br><br>
+        email:<input name="email" required><br><br>
+
+        Password: <input type="password" name="password" required><br><br>
+        confirmpassword:<input type="password" name="pconfirmpassword" required><br><br>
+        <input type="submit" value="Register">
+    </form>
+    <p><a href="/login">Already have an account? Login</a></p>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>{% for msg in messages %}<li>{{ msg }}</li>{% endfor %}</ul>
+    {% endif %}
+    {% endwith %}
+</body>
+
+</html>

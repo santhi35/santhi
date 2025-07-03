@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Login</title>
+    <style>
+        /* === Login Page Styles === */
+        body {
+            background-color: #fffaf4;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 60px;
+            margin: 0;
+        }
+
+        h2 {
+            color: #d35400;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        form {
+            background-color: #ffffff;
+            padding: 25px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 320px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0 20px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        input[type="submit"] {
+            background-color: #e67e22;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            width: 100%;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #d35400;
+        }
+
+        p {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Flash message styling */
+        ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+    <style>
+        /* ... existing styles ... */
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: url("{{ url_for('static', filename='images/backgroundhome2.jpg') }}") no-repeat center center fixed;
+            background-size: cover;
+            color: #4e342e;
+        }
+
+        /* Optional: Add a background color overlay for readability */
+        main {
+            background-color: rgba(255, 243, 224, 0.9);
+            /* semi-transparent background */
+            padding: 60px 20px;
+            text-align: center;
+            min-height: calc(100vh - 150px);
+        }
+
+        /* ... rest of your styles ... */
+    </style>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: url("{{ url_for('static', filename='images/background3.jpg') }}") no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+    </style>
+
+</head>
+
+
+<body>
+    <h2>Login</h2>
+    <form method="POST">
+        Username: <input name="username" required><br><br>
+        Password: <input type="password" name="password" required><br><br>
+        <input type="submit" value="Login">
+    </form>
+    <p><a href="/register">Don't have an account? Register</a></p>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>{% for msg in messages %}<li>{{ msg }}</li>{% endfor %}</ul>
+    {% endif %}
+    {% endwith %}
+</body>
+
+</html>

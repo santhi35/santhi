@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Checkout</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #fffaf0;
+        }
+
+        table {
+            width: 80%;
+            margin: auto;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+        }
+
+        .total {
+            font-weight: bold;
+            background-color: #e0ffe0;
+        }
+
+        .center {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background-color: green;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn:hover {
+            background-color: darkgreen;
+        }
+    </style>
+</head>
+
+<body>
+    <h2 class="center">Checkout</h2>
+
+    {% if cart and cart|length > 0 %}
+    <table>
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Item</th>
+                <th>Price (₹)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% set total = namespace(value=0) %}
+            {% for item in cart %}
+            <tr>
+                <td>
+                    <img src="{{ url_for('static', filename='images/' ~ item.image) }}" alt="{{ item.name }}">
+                </td>
+                <td>{{ item.name }}</td>
+                <td>₹{{ item.price }}</td>
+            </tr>
+            {% set total.value = total.value + item.price %}
+            {% endfor %}
+            <tr class="total">
+                <td colspan="2">Total</td>
+                <td>₹{{ total.value }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="center">
+        <form method="POST">
+            <button type="submit" class="btn">Place Order</button>
+        </form>
+    </div>
+    {% else %}
+    <p class="center">Your cart is empty.</p>
+    {% endif %}
+</body>
+
+</html>

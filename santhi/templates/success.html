@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Order Successful</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f9ff;
+            color: #333;
+            text-align: center;
+            padding-top: 100px;
+        }
+
+        h2 {
+            color: #4CAF50;
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+            background-color: #007BFF;
+            padding: 12px 24px;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Thank You!</h2>
+    <p>Your order was placed successfully. You will receive a confirmation shortly.</p>
+    <a href="{{ url_for('home') }}">Back to Home</a>
+</body>
+
+</html>

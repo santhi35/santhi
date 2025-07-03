@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Cart</title>
+    <style>
+        /* === Cart Page Styling === */
+        body {
+            background-color: #fffaf4;
+            font-family: 'Segoe UI', sans-serif;
+            padding: 50px 20px;
+            text-align: center;
+            margin: 0;
+        }
+
+        h2 {
+            color: #d35400;
+            font-size: 32px;
+            margin-bottom: 25px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0 auto 30px auto;
+            max-width: 400px;
+        }
+
+        ul li {
+            background-color: #ffffff;
+            margin-bottom: 12px;
+            padding: 12px 18px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            font-size: 16px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        p {
+            color: #7f8c8d;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        /* Back to home link */
+        a {
+            text-decoration: none;
+            color: white;
+            background-color: #e67e22;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #d35400;
+        }
+    </style>
+</head>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<body>
+    <h2>Your Cart</h2>
+    {% if cart %}
+    <ul>
+        {% for item in cart %}
+        <li>{{ item.name }} - ₹{{ item.price }}</li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>Your cart is empty.</p>
+    {% endif %}
+    <a href="{{ url_for('checkout') }}" class="btn">Go to Checkout</a>
+
+    <a href="/">← Back to Home</a>
+</body>
+
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>About Us</title>
+    <style>
+        /* === About Page Styling === */
+body {
+    background-color: #fffaf4;
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+h2 {
+    color: #d35400;
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+p {
+    font-size: 16px;
+    max-width: 700px;
+    margin: 10px auto;
+    color: #444;
+    line-height: 1.6;
+}
+
+a {
+    display: inline-block;
+    margin-top: 30px;
+    text-decoration: none;
+    color: white;
+    background-color: #e67e22;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+a:hover {
+    background-color: #d35400;
+}
+
+    </style>
+</head>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<body>
+    <h2>About Us</h2>
+    <p>Welcome to Homemade Pickles & Snacks! We specialize in authentic, handmade pickles and traditional snacks made
+        with love and care.</p>
+    <p>Our mission is to bring the taste of tradition to your doorstep.</p>
+    <a href="/">← Go Home</a>
+</body>
+
+</html>
