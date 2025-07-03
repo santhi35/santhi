@@ -1,5 +1,47 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, request, session, redirect, url_for, render_template, flash
+import boto3
+from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+import logging
+import os
+from dotenv import load_dotenv
+from functools import wraps
 
+# Load .env variables
+load_dotenv()
+
+# Flask Setup
+app = Flask(__name__)
+app.secret_key = os.environ.get('SECRET_KEY', 'fleetsync_secret_key_2024')
+
+# AWS and Email Config
+AWS_REGION = os.environ.get('AWS_REGION_NAME', 'us-east-1')
+dynamodb = boto3.resource('dynamodb', region_name=AWS_REGION)
+sns = boto3.client('sns', region_name=AWS_REGION)
+
+# Email Config
+SMTP_SERVER = os.environ.get('SMTP_SERVER', 'smtp.gmail.com')
+SMTP_PORT = int(os.environ.get('SMTP_PORT', 587))
+SENDER_EMAIL = os.environ.get('SENDER_EMAIL')
+SENDER_PASSWORD = os.environ.get('SENDER_PASSWORD')
+ENABLE_EMAIL = os.environ.get('ENABLE_EMAIL', 'False').lower() == 'true'
+ENABLE_SNS = os.environ.get('ENABLE_SNS', 'False').lower() == 'true'
+SNS_TOPIC_ARN = os.environ.get('SNS_TOPIC_ARN')
+
+# Table Names
+USERS_TABLE_NAME = os.environ.get('USERS_TABLE_NAME', 'FleetSyncUsers')
+users_table = dynamodb.Table(USERS_TABLE_NAME)
+
+# Logging Setup
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[logging.FileHandler("fleetsync.log"), logging.StreamHandler()]
+)
+logger = logging.getLogger(__name__)
 app = Flask(__name__)
 app.secret_key = "secretkey123"
 
@@ -21,6 +63,60 @@ snack_list = [
         {"id": 10, "name": "Boondi", "price": 65, "image":'images/boondi.jpg'},
         {"id": 11, "name": "Chakodi", "price": 55, "image": 'images/chekodilu.jpg'},
     ]
+def is_logged_in():
+    return 'email' in session
+
+def get_user_role(email):
+    try:
+        response = users_table.get_item(Key={'email': email})
+        return response.get('Item', {}).get('role')
+    except Exception as e:
+        logger.error(f"Role fetch error: {e}")
+        return None
+
+def send_email(to, subject, body):
+    if not ENABLE_EMAIL:
+        logger.info(f"[EMAIL DISABLED] {subject}")
+        return
+    try:
+        msg = MIMEMultipart()
+        msg['From'] = SENDER_EMAIL
+        msg['To'] = to
+        msg['Subject'] = subject
+        msg.attach(MIMEText(body, 'plain'))
+
+        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
+            server.starttls()
+            server.login(SENDER_EMAIL, SENDER_PASSWORD)
+            server.sendmail(SENDER_EMAIL, to, msg.as_string())
+        logger.info(f"Email sent to {to}")
+    except Exception as e:
+        logger.error(f"Email error: {e}")
+
+def publish_to_sns(message, subject="FleetSync Notification"):
+    if not ENABLE_SNS:
+        logger.info("[SNS DISABLED]")
+        return
+    try:
+        sns.publish(TopicArn=SNS_TOPIC_ARN, Message=message, Subject=subject)
+        logger.info("SNS message sent.")
+    except Exception as e:
+        logger.error(f"SNS error: {e}")
+
+def require_role(required_role):
+    def decorator(f):
+        @wraps(f)
+        def wrapper(*args, **kwargs):
+            if not is_logged_in():
+                flash("Please log in first", "warning")
+                return redirect(url_for('login'))
+            role = get_user_role(session['email'])
+            if required_role != 'any' and role != required_role:
+                flash("Access denied", "danger")
+                return redirect(url_for('dashboard'))
+            return f(*args, **kwargs)
+        return wrapper
+    return decorator
 @app.route('/snacks')
 def snacks():
     snack_list = [
